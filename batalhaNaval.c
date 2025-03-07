@@ -1,8 +1,12 @@
 #include <stdio.h>
 
-// Desafio Batalha Naval - MateCheck
-// Este código inicial serve como base para o desenvolvimento do sistema de Batalha Naval.
-// Siga os comentários para implementar cada parte do desafio.
+void preencheTabuleiro(int tabuleiro[10][10]){
+    for(int i=0;i<10;i++){
+        for(int j=0;j<10;j++){
+            tabuleiro[i][j] = 0;
+        }
+    }
+}
 
 void imprimeTabuleiro(int tabuleiro[10][10]){
     printf("   0 1 2 3 4 5 6 7 8 9\n\n");
@@ -13,6 +17,7 @@ void imprimeTabuleiro(int tabuleiro[10][10]){
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 int verificaHH(int h1[2],int h2[2],int th1, int th2){//verifica se 2 navios na horizontal se sobrepoem
@@ -134,14 +139,199 @@ int verificaPosicao(int h1[2],int h2[2],int v1[2],int v2[2],int d1[2],int d2[2],
     return 1;
 }
 
+void preencheCone0(int cone[3][5]){//preenche com 0s
+    for(int i=0;i<3;i++){
+            for(int j=0;j<5;j++){
+                cone[i][j]=0;
+            }
+        }
+}
+
+void preencheCruz0(int cruz[5][5]){//preenche com 0s
+    for(int i=0;i<5;i++){
+            for(int j=0;j<5;j++){
+                cruz[i][j]=0;
+            }
+        }
+}
+
+void preencheOcta0(int octa[5][5]){//preenche com 0s
+    for(int i=0;i<5;i++){
+            for(int j=0;j<5;j++){
+                octa[i][j]=0;
+            }
+        }
+}
+
+void imprimeCruz(int cruz[5][5]){
+    for(int i = 0; i< 5; i++){
+            for(int j = 0; j<5; j++){
+            printf("%d ",cruz[i][j]);
+            }
+            printf("\n");
+        }
+        printf("\n");
+}
+
+void imprimeOcta(int octa[5][5]){
+    for(int i = 0; i< 5; i++){
+            for(int j = 0; j<5; j++){
+            printf("%d ",octa[i][j]);
+            }
+            printf("\n");
+        }
+        printf("\n");
+}
+
+void imprimeCone(int cone[3][5]){
+    for(int i = 0; i< 3; i++){
+            for(int j = 0; j<5; j++){
+            printf("%d ",cone[i][j]);
+            }
+            printf("\n");
+        }
+        printf("\n");
+}
+
+void preencheCone(int cone[3][5]){
+    for(int i = 0; i< 3; i++){
+        for(int j = 0; j<5; j++){
+            if(j == (i*-1+2)){
+                int k = 2*i+1;
+                for(int l=0;l<k;l++){
+                    cone[i][j+l]=1;
+                }
+            }
+        }
+    }
+}
+
+void preencheOcta(int octa[5][5]){
+    int k=0;
+    for(int i = 0; i< 5; i++){
+        for(int j = 0; j<5; j++){
+            if(i<=2){
+                if(j == (i*-1+2)){
+                    k = 2*i+1;
+                    for(int l=0;l<k;l++){
+                        octa[i][j+l]=1;
+                    }
+                }
+            }else{
+                if(j == ((4-i)*-1+2)){
+                    k = 2*(4-i)+1;
+                    for(int l=0;l<k;l++){
+                        octa[i][j+l]=1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void preencheCruz(int cruz[5][5]){
+    for(int i=0;i<5;i++){
+        for(int j=0;j<5;j++){
+            if(i==2 || j==2){
+                cruz[i][j]=1;
+            }
+        }
+    }
+}
+
+void usaCone(int tabuleiro[10][10],int cone[3][5],int oL,int oC){
+    int c=oC-2,auxL=0,auxC=0,auxC2=0;
+    if(oL+2>9){ //trata borda inferior
+        auxL=oL+2-9;
+    }
+
+    if(oC+2>9){//trata borda direita
+        auxC=oC+2-9;
+    }
+
+    if(c<0){//trata borda esquerda
+        auxC2=-1*c;
+    }
+
+    for(int i=0;i<3-auxL;i++){
+        for(int j=auxC2;j<5-auxC;j++){
+            if(cone[i][j]==1){//verifica se está na área de efeito
+                tabuleiro[oL+i][c+j]=5;
+            }
+        }
+    }
+}
+
+void usaCruz(int tabuleiro[10][10],int cruz[5][5],int oL,int oC){
+    int l=oL-2,c=oC-2,auxL1=0,auxL2=0,auxC1=0,auxC2=0;
+
+    if(oL+2>9){ //trata borda inferior
+        auxL1=oL+2-9;
+    }
+    if(l<0){
+        auxL2=-1*l;
+    }
+    if(oC+2>9){//trata borda direita
+        auxC1=oC+2-9;
+    }
+
+    if(c<0){//trata borda esquerda
+        auxC2=-1*c;
+    }
+    //printf("%d %d %d %d\n\n",auxL1,auxL2,auxC1,auxC2);
+    for(int i=auxL2;i<5-auxL1;i++){
+        for(int j=auxC2;j<5-auxC1;j++){
+                //imprimeCruz(cruz);
+            if(cruz[i][j]==1){//verifica se está na área de efeito
+
+                tabuleiro[l+i][c+j]=5;
+                //printf("%d %d ",l+i,c+j);
+                //printf("x ");
+            }else{
+           // printf("w ");
+            }
+        }
+        printf("\n");
+    }
+}
+
+void usaOcta(int tabuleiro[10][10],int octa[5][5],int oL,int oC){
+    int l=oL-2,c=oC-2,auxL1=0,auxL2=0,auxC1=0,auxC2=0;
+
+    if(oL+2>9){ //trata borda inferior
+        auxL1=oL+2-9;
+    }
+    if(l<0){
+        auxL2=-1*l;
+    }
+    if(oC+2>9){//trata borda direita
+        auxC1=oC+2-9;
+    }
+
+    if(c<0){//trata borda esquerda
+        auxC2=-1*c;
+    }
+    //printf("%d %d %d %d\n\n",auxL1,auxL2,auxC1,auxC2);
+    for(int i=auxL2;i<5-auxL1;i++){
+        for(int j=auxC2;j<5-auxC1;j++){
+                //imprimeCruz(cruz);
+            if(octa[i][j]==1){//verifica se está na área de efeito
+
+                tabuleiro[l+i][c+j]=5;
+                //printf("%d %d ",l+i,c+j);
+                //printf("x ");
+            }else{
+           // printf("w ");
+            }
+        }
+        printf("\n");
+    }
+}
+
 int main() {
     //inicializa tabuleiro com 0
     int tabuleiro[10][10];
-    for(int i=0;i<10;i++){
-        for(int j=0;j<10;j++){
-            tabuleiro[i][j] = 0;
-        }
-    }
+    preencheTabuleiro(tabuleiro);
     //inicializa navios
     int navioH1[2]={9,7}, navioH2[2] = {2,5}, navioV1[2]={3,9},navioV2[2] = {7,0}, navioD1[2] = {3,3}, navioD2[2] = {0,2},tamanhoH1=3, tamanhoH2=3, tamanhoV1=3,tamanhoV2=3,tamanhoD1=3,tamanhoD2=3; //navio[linha da posição inicial][coluna da posição inicial]
 
@@ -168,6 +358,37 @@ int main() {
         for(int i=0;i<tamanhoD2;i++){
             tabuleiro[navioD2[0]+i][navioD2[1]-i] = 3;
         }
+        //imprimeTabuleiro(tabuleiro);
+        imprimeTabuleiro(tabuleiro);
+    int cone[3][5],cruz[5][5], octa[5][5];
+
+        preencheCone0(cone);
+        preencheOcta0(octa);
+        preencheCruz0(cruz);
+        preencheCone(cone);
+        preencheOcta(octa);
+        preencheCruz(cruz);
+
+        imprimeCone(cone);
+        imprimeCruz(cruz);
+        imprimeOcta(octa);
+
+        //usa o cone
+        int oL=2,oC=5;
+        usaCone(tabuleiro,cone,oL,oC);
+         //imprimeTabuleiro(tabuleiro);
+        imprimeTabuleiro(tabuleiro);
+
+        //usa a cruz
+        oL=0,oC=8;
+        usaCruz(tabuleiro,cruz,oL,oC);
+         //imprimeTabuleiro(tabuleiro);
+        imprimeTabuleiro(tabuleiro);
+
+        //usa o octaedro
+        oL=8,oC=4;
+        usaOcta(tabuleiro,octa,oL,oC);
+         //imprimeTabuleiro(tabuleiro);
         imprimeTabuleiro(tabuleiro);
     }
     return 0;
